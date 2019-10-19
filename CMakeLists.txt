@@ -1,0 +1,26 @@
+cmake_minimum_required (VERSION 2.8.4)
+cmake_policy(SET CMP0015 NEW)
+cmake_policy(SET CMP0081 OLD)
+project (demo1 C)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+set(INC_DIRS "${GTK3_INCLUDE_DIRS}")
+string(REPLACE "C:" "../../.." INC_DIRS "${INC_DIRS}")
+include_directories( ${INC_DIRS} )
+set(GTK3_LIB_DIRS "${GTK3_LIBRARY_DIRS}")
+string(REPLACE "C:" "../../.." GTK3_LIB_DIRS "${GTK3_LIB_DIRS}")
+link_directories(${GTK3_LIB_DIRS})
+link_libraries(${GTK3_LIBRARIES})
+add_definitions(${GTK3_CFLAGS_OTHER})
+set(OPTIONS "-Wall -g")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${OPTIONS}")
+set(EXE_OPTIONS "-mwindows")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${EXE_OPTIONS}")
+add_definitions( -DWIN32 )
+SET(SOURCES demo1_main.c
+			window1_gui.c
+			aboutdialog1_gui.c
+			control.c
+			)
+add_library(lib1 OBJECT ${SOURCES} )
+add_executable( demo1 $<TARGET_OBJECTS:lib1> )
